@@ -1,2 +1,4 @@
 node_modules/
 *.DS_Store
+js1k.js
+js1k-min.js
