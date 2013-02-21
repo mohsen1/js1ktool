@@ -1,0 +1,16 @@
+{
+  "name": "JS1KTool",
+  "version": "1.0.0",
+  "dependencies": 
+    {
+      "asciimo": "latest",
+      "colors": "latest",
+      "forever": "latest",
+      "express": "latest"
+    },
+  "scripts": 
+    {
+      "start": "forever tool.js"
+    },
+  "keywords": ["JS1K", "JS1KTool", "JS 1K"]
+}
