@@ -1,19 +1,50 @@
 var
+  sys = require('sys'), 
   express = require('express'),
-  asciimo = require('asciimo'),
-  colors  = require('colors');
+  asciimo = require('asciimo').Figlet,
+  fs = require('fs'),
+  compressor = require('node-minify'),
+  colors = require('colors');
 
 
 var 
   server = express();
 
 
-server.get('/', function(req, res){
+function readFileError(err, res){
+  res.send("Error reading file!");
+  console.error(err);
+}
 
-  res.send('shim.html');
+server.get('/', function(req, res){
+  fs.readFile('./shim.html', 'utf8', function (err,shim) {
+    if (err) {readFileError(err, res);}
+      new compressor.minify({
+          type: 'uglifyjs',
+          fileIn: 'js1k.js',
+          fileOut: 'js1k-min.js',
+          callback: function(err){
+              if(err){readFileError(err, res);}
+              fs.readFile('./js1k-min.js', 'utf8', function (err,js1k) {
+                if (err) {readFileError(err, res);}
+                shim = shim.replace('SCRIPT', js1k);
+                var length = js1k.length;
+                asciimo.write(length+' Bytes', 'banner', function(art){
+                  if (length<1024){
+                    sys.puts(art.green);
+                  }else {
+                    sys.puts(art.red);
+                  }
+                });
+                res.send(shim);
+              });
+          }
+      });
+  });
 });
 
-server.listen(1024);
+var port = 1024;
+server.listen(port);
 
 
-console.log("Server is running. Go to localhost:1024")
+console.log("Server is running. Go to localhost:"+port)

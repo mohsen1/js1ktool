@@ -6,11 +6,12 @@
       "asciimo": "latest",
       "colors": "latest",
       "forever": "latest",
-      "express": "latest"
+      "express": "latest",
+      "node-minify": "latest"
     },
   "scripts": 
     {
-      "start": "forever tool.js"
+      "start": "forever -w tool.js"
     },
   "keywords": ["JS1K", "JS1KTool", "JS 1K"]
 }

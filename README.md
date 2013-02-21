@@ -15,4 +15,6 @@ Open `localhost:1024` in the browser
 
 start editing `js1k.js` and see the length of minified version in console. 
 
+
+= TODOs
 JS1K tool will live reload the browser on edits.
