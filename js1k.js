@@ -26,14 +26,14 @@ zou.addEventListener('click', function(){z-=5; p()})
 
 
 
-c.addEventListener('mousedown', function(e){
+c.onmousedown = function(e){
   orgX = e.pageX - dx;
   orgY = e.pageY - dy;
-  c.addEventListener('mousemove', mmeh);
-})
-b.addEventListener('mouseup', function(e){
-  c.removeEventListener('mousemove', mmeh);
-})
+  c.onmousemove = mmeh
+}
+b.onmouseup = function(e){
+  c.onmousemove = 0
+}
 
 dx = 0;
 dy = 0;
