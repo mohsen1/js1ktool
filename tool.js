@@ -16,30 +16,38 @@ function readFileError(err, res){
   console.error(err);
 }
 
+function minify(){
+  function callback (func){
+    if (typeof func === 'function') func();
+  }
+  new compressor.minify({
+    type: 'uglifyjs',
+    fileIn: 'js1k.js',
+    fileOut: 'js1k-min.js',
+    callback: callback
+  });
+  return {then: callback}
+}
+
 server.get('/', function(req, res){
   fs.readFile('./shim.html', 'utf8', function (err,shim) {
     if (err) {readFileError(err, res);}
-      new compressor.minify({
-          type: 'uglifyjs',
-          fileIn: 'js1k.js',
-          fileOut: 'js1k-min.js',
-          callback: function(err){
-              if(err){readFileError(err, res);}
-              fs.readFile('./js1k-min.js', 'utf8', function (err,js1k) {
-                if (err) {readFileError(err, res);}
-                shim = shim.replace('SCRIPT', js1k);
-                var length = js1k.length;
-                asciimo.write(length+' Bytes', 'banner', function(art){
-                  if (length<1024){
-                    sys.puts(art.green);
-                  }else {
-                    sys.puts(art.red);
-                  }
-                });
-                res.send(shim);
-              });
+    minify().then(function(err){
+      if(err){readFileError(err, res);}
+      fs.readFile('./js1k-min.js', 'utf8', function (err,js1k) {
+        if (err) {readFileError(err, res);}
+        shim = shim.replace('SCRIPT', js1k);
+        var length = js1k.length;
+        asciimo.write(length+' Bytes', 'banner', function(art){
+          if (length<1024){
+            sys.puts(art.green);
+          }else {
+            sys.puts(art.red);
           }
+        });
+        res.send(shim);
       });
+    })
   });
 });
 
