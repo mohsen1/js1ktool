@@ -11,6 +11,7 @@ How to use it
 ``` Bash
 git clone git@github.com:mohsen1/js1ktool.git
 npm install
+touch js1k.js 
 npm start
 ```
 
