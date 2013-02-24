@@ -29,6 +29,16 @@ function minify(){
   return {then: callback}
 }
 
+function puts(length) {
+  asciimo.write(length+' Bytes', 'banner', function(art){
+    if (length<1024){
+      sys.puts(art.green);
+    }else {
+      sys.puts(art.red);
+    }
+  });
+}
+
 server.get('/', function(req, res){
   fs.readFile('./shim.html', 'utf8', function (err,shim) {
     if (err) {readFileError(err, res);}
@@ -37,22 +47,21 @@ server.get('/', function(req, res){
       fs.readFile('./js1k-min.js', 'utf8', function (err,js1k) {
         if (err) {readFileError(err, res);}
         shim = shim.replace('SCRIPT', js1k);
-        var length = js1k.length;
-        asciimo.write(length+' Bytes', 'banner', function(art){
-          if (length<1024){
-            sys.puts(art.green);
-          }else {
-            sys.puts(art.red);
-          }
-        });
+        puts(js1k.length);
         res.send(shim);
       });
     })
   });
 });
 
-var port = 1024;
+var port = 1024 || process.env.PORT;
 server.listen(port);
 
+minify();
+fs.readFile('./js1k-min.js', 'utf8', function (err,js1k) {
+  if(!err){
+    puts(js1k.length);
+  }
+});
 
 console.log("Server is running. Go to localhost:"+port)
