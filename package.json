@@ -7,11 +7,14 @@
       "colors": "latest",
       "forever": "latest",
       "express": "latest",
-      "node-minify": "latest"
+      "node-minify": "latest",
+      "socket.io": "latest",
+      "node-watch": "latest"
     },
   "scripts": 
     {
-      "start": "forever -w tool.js"
+      "start": "forever -w tool.js",
+      "debug": "node-inspector & node tool.js"
     },
   "keywords": ["JS1K", "JS1KTool", "JS 1K"]
 }

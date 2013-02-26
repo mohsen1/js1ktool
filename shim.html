@@ -17,6 +17,12 @@
 SCRIPT
 // end of submission //
 		</script>
-	
-
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+			var socket = io.connect('http://localhost:1024'); // <-- TODO, replace it with process.env.PORT
+		  socket.on('reload', function () {
+		  	console.log("Reload emitted");
+		    window.location.reload();
+		  });
+		</script>
 </body></html>

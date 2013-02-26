@@ -3,13 +3,12 @@ var
   express = require('express'),
   asciimo = require('asciimo').Figlet,
   fs = require('fs'),
+  watch = require('node-watch'),
   compressor = require('node-minify'),
-  colors = require('colors');
-
-
-var 
-  server = express();
-
+  colors = require('colors'), 
+  app = express(),
+  server = require('http').createServer(app),
+  io = require('socket.io').listen(server);
 
 function readFileError(err, res){
   res.send("Error reading file!");
@@ -39,7 +38,11 @@ function puts(length) {
   });
 }
 
-server.get('/', function(req, res){
+function reload(){
+  io.sockets.emit("reload");
+}
+
+app.get('/', function(req, res){
   fs.readFile('./shim.html', 'utf8', function (err,shim) {
     if (err) {readFileError(err, res);}
     minify().then(function(err){
@@ -49,6 +52,7 @@ server.get('/', function(req, res){
         shim = shim.replace('SCRIPT', js1k);
         puts(js1k.length);
         res.send(shim);
+        reload();
       });
     })
   });
@@ -57,7 +61,13 @@ server.get('/', function(req, res){
 var port = 1024 || process.env.PORT;
 server.listen(port);
 
-minify();
+watch('./js1k.js', function (monitor) {
+  minify().then(function(){
+    reload();
+  });
+});  
+
+
 fs.readFile('./js1k-min.js', 'utf8', function (err,js1k) {
   if(!err){
     puts(js1k.length);
