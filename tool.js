@@ -82,4 +82,8 @@ fs.readFile('./js1k-min.js', 'utf8', function (err,js1k) {
 var port = 1024 || process.env.PORT;
 server.listen(port);
 
+setTimeout(function(){
+  reload();
+}, 300);
+
 console.log("Server is running. Go to localhost:"+port)
