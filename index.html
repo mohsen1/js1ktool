@@ -1,0 +1,28 @@
+<html>
+<head>
+  <title>JS1K tool</title>
+  <style>
+    html, body, iframe{
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    iframe{
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <iframe src="/shim"></iframe>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io.connect('http://localhost:1024'); // <-- TODO, replace it with process.env.PORT
+    socket.on('reload', function () {
+      console.log("Reload emitted");
+      document.querySelector('iframe').contentWindow.location.reload()
+    });
+  </script>
+</body>
+</html>

@@ -42,7 +42,7 @@ function reload(){
   io.sockets.emit("reload");
 }
 
-app.get('/', function(req, res){
+app.get('/shim', function(req, res){
   fs.readFile('./shim.html', 'utf8', function (err,shim) {
     if (err) {readFileError(err, res);}
     minify().then(function(err){
@@ -58,13 +58,18 @@ app.get('/', function(req, res){
   });
 });
 
-var port = 1024 || process.env.PORT;
-server.listen(port);
+app.get('/', function(req, res){
+  fs.readFile('index.html', 'utf8', function(err, index){
+    if (err) {readFileError(err, res);}
+    res.send(index);
+  })
+});
 
-watch('./js1k.js', function (monitor) {
-  minify().then(function(){
-    reload();
-  });
+
+watch('js1k.js', function (file) {
+  console.warn(file);
+  minify()
+  reload();
 });  
 
 
@@ -73,5 +78,8 @@ fs.readFile('./js1k-min.js', 'utf8', function (err,js1k) {
     puts(js1k.length);
   }
 });
+
+var port = 1024 || process.env.PORT;
+server.listen(port);
 
 console.log("Server is running. Go to localhost:"+port)
